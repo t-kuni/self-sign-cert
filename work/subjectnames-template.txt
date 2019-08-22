@@ -1,0 +1,1 @@
+subjectAltName = DNS:${HOST}, IP:${IP}
