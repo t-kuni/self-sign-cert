@@ -22,17 +22,17 @@ docker build --tag self-sign-cert ./
 
 ## 実行
 
-`HOST=xxx`でHTTPS化したいサーバのホスト名を指定する
-`IP=xxx`でHTTPS化したいサーバのIPアドレスを指定する
+`HOST=xxx`でHTTPS化したいサーバのホスト名を指定してください
+`IP=xxx`でHTTPS化したいサーバのIPアドレスを指定してください
 
 ```
 docker run --rm -v $PWD/work:/work -e HOST=example.com -e IP=192.168.99.100 self-sign-cert
 ```
 
-`work/out`ディレクトリに以下３つのファイルが生成される。
+`work/out`ディレクトリに以下３つのファイルが生成されます。
 
 * server.crt
-    * サーバ証明書（コイツをサーバやクライアントに登録する必要がある）
+    * サーバ証明書（コイツをサーバやクライアントに登録する必要があります）
 * server.csr
     * 署名要求
 * server.key
