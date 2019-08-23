@@ -50,3 +50,29 @@ docker run --rm -v $PWD/work:/work self-sign-cert openssl x509 -in ./out/server.
 ## サーバ証明書(server.crt)をサーバ、クライアントに組み込む
 
 https://qiita.com/t-kuni/items/d3d72f429273cf0ee31e#nginx%E3%81%AE%E8%A8%AD%E5%AE%9A
+
+
+
+## ペアチェック
+
+[参考ドキュメント](https://qiita.com/sumida0713/items/72fcb2b0ab926c906507)
+
+コマンドの実行結果(チェックサム値)が同じであれば、ペア(組み合わせ)が正しい。
+
+SSL証明書
+
+```
+docker run --rm -v $PWD/work:/work self-sign-cert openssl x509 -noout -modulus -in ./out/server.crt | openssl md5
+```
+
+秘密鍵
+
+```
+docker run --rm -v $PWD/work:/work self-sign-cert openssl rsa -noout -modulus -in ./out/server.key | openssl md5
+```
+
+署名要求
+
+```
+docker run --rm -v $PWD/work:/work self-sign-cert openssl req -noout -modulus -in ./out/server.csr | openssl md5
+```
