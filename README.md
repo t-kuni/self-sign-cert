@@ -7,30 +7,18 @@ Subject Alternative Namesも設定するのでChromeでも利用できます。
   
 なお、dockerを実行できる環境が必要です。
 
-## リポジトリのクローン
-
+## 実行方法
+  
 ```
-git clone ssh://git@github.com/t-kuni/self-sign-cert 
-cd self-sign-cert
-```
-
-## ビルド
-
-```
-docker build --tag self-sign-cert ./
+docker run --rm -v $PWD/out:/out -e HOST=example.com -e IP=192.168.99.100 tkuni83/self-sign-cert
 ```
 
-## 実行
+`$PWD/out`には、出力先のディレクトリを指定してください。  
+`HOST=xxx`には、HTTPS化したいサーバのホスト名を指定してください。  
+`IP=xxx`には、HTTPS化したいサーバのIPアドレスを指定してください。  
+この値が`Common Name`, `Subject Alternative Names`としてサーバ証明書に組み込まれます。
 
-`HOST=xxx`でHTTPS化したいサーバのホスト名を指定してください  
-`IP=xxx`でHTTPS化したいサーバのIPアドレスを指定してください  
-この値が`Common Name`, `Subject Alternative Names`としてサーバ証明書に組み込まれます。  
-
-```
-docker run --rm -v $PWD/work:/work -e HOST=example.com -e IP=192.168.99.100 self-sign-cert
-```
-
-`work/out`ディレクトリに以下３つのファイルが生成されます。
+`$PWD/out`ディレクトリに以下３つのファイルが生成されます。
 
 * server.crt
     * サーバ証明書（コイツをサーバやクライアントに登録する必要があります）
@@ -44,7 +32,7 @@ docker run --rm -v $PWD/work:/work -e HOST=example.com -e IP=192.168.99.100 self
 サーバ証明書の内容が気になる場合にどうぞ。
 
 ```
-docker run --rm -v $PWD/work:/work self-sign-cert openssl x509 -in ./out/server.crt -text -noout
+docker run --rm -v $PWD/out:/out tkuni83/self-sign-cert openssl x509 -in /out/server.crt -text -noout
 ```
 
 ## サーバ証明書(server.crt)をサーバ、クライアントに組み込む
@@ -62,21 +50,35 @@ https://qiita.com/t-kuni/items/d3d72f429273cf0ee31e#nginx%E3%81%AE%E8%A8%AD%E5%A
 SSL証明書
 
 ```
-docker run --rm -v $PWD/work:/work self-sign-cert openssl x509 -noout -modulus -in ./out/server.crt | openssl md5
+docker run --rm -v $PWD/out:/out tkuni83/self-sign-cert openssl x509 -noout -modulus -in /out/server.crt | openssl md5
 ```
 
 秘密鍵
 
 ```
-docker run --rm -v $PWD/work:/work self-sign-cert openssl rsa -noout -modulus -in ./out/server.key | openssl md5
+docker run --rm -v $PWD/out:/out tkuni83/self-sign-cert openssl rsa -noout -modulus -in /out/server.key | openssl md5
 ```
 
 署名要求
 
 ```
-docker run --rm -v $PWD/work:/work self-sign-cert openssl req -noout -modulus -in ./out/server.csr | openssl md5
+docker run --rm -v $PWD/out:/out tkuni83/self-sign-cert openssl req -noout -modulus -in /out/server.csr | openssl md5
 ```
 
 ## 最後に
 
 お役にたてましたらスターを頂けると嬉しいです！！
+
+## Development
+
+Build
+
+```
+docker build --tag self-sign-cert ./
+```
+
+Run
+
+```
+docker run --rm -v $PWD/out:/out -e HOST=example.com -e IP=192.168.99.100 self-sign-cert
+```
