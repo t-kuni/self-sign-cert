@@ -5,4 +5,9 @@ COPY src /src
 WORKDIR /src
 RUN chmod +x ./gen.sh
 
+RUN mkdir -p demoCA/newcerts
+RUN echo 00 > demoCA/serial
+RUN touch demoCA/index.txt
+RUN mkdir -p demoCA/newcerts
+
 CMD ["./gen.sh"]
